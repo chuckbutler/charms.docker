@@ -36,6 +36,23 @@ class Docker:
         # TODO: Add TCP:// support for running check
         return os.path.isfile(self.socket)
 
+    def rmi(self, image, force=False):
+        '''
+        Docker remove image exposed as a method.
+
+        @param image - string of the image to remove from the host.
+        @param force - Forcibly remove the image, defaults to false.
+        '''
+        if force:
+            command = "docker rmi -f {}".format(image)
+        else:
+            command = "docker rmi {}".format(image)
+
+        try:
+            subprocess.check_output(split(command))
+        except subprocess.CalledProcessError as expect:
+            print("Error: ", expect.returncode, expect.output)
+
     def run(self, image, options=[], commands=[], arg=[]):
         '''
         Docker Run exposed as a method. This wont be as natural as the
